@@ -1,5 +1,4 @@
 require 'test/unit'
-require 'byebug'
 
 require_relative '../../src/utils/matrix'
 
