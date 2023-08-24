@@ -1,6 +1,6 @@
 require 'test/unit'
 
-require_relative '../../src/utils/shape_error'
+require_relative '../../lib/utils/shape_error'
 
 class TestShapeError < Test::Unit::TestCase
     def test_raise

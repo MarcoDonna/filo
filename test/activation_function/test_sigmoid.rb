@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'matrix'
 
-require_relative '../../src/activation_function/sigmoid'
+require_relative '../../lib/activation_function/sigmoid'
 
 class TestSigmoid < Test::Unit::TestCase
     def test_function

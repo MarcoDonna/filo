@@ -1,6 +1,6 @@
 require 'test/unit'
 
-require_relative '../../src/utils/matrix'
+require_relative '../../lib/utils/matrix'
 
 class TestMatrix < Test::Unit::TestCase
     def test_each_row

@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'matrix'
 
-require_relative '../../src/loss_function/mean_squared_error'
+require_relative '../../lib/loss_function/mean_squared_error'
 
 class TestMeanSquaredError < Test::Unit::TestCase
     def test_loss_function
