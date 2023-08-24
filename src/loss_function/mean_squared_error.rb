@@ -1,8 +1,6 @@
 require_relative 'loss_function'
 require_relative '../utils/matrix'
 
-require 'byebug'
-
 class MeanSquaredError
 
     #Calculate the average loss across batch for each output neuron.
