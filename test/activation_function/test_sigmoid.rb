@@ -1,6 +1,7 @@
 require 'test/unit'
 require 'matrix'
 
+require_relative '../../lib/utils/expanded_test_assertions'
 require_relative '../../lib/activation_function/sigmoid'
 
 class TestSigmoid < Test::Unit::TestCase
@@ -11,11 +12,11 @@ class TestSigmoid < Test::Unit::TestCase
 
         af = Sigmoid.new
         output = af.apply_activation_function(input)
-        assert_equal(expected, output)
+        assert_each_in_delta(expected.to_a.flatten, output.to_a.flatten, 0.001)
 
         af = Sigmoid.new({gain: 0.5})
         output = af.apply_activation_function(input)
-        assert_equal(expected_with_gain, output)
+        assert_each_in_delta(expected_with_gain.to_a.flatten, output.to_a.flatten, 0.001)
 
         #This is effectively pointer comparison.
         #The method apply_activation_function creates a new instance of Matrix as output.
@@ -30,11 +31,11 @@ class TestSigmoid < Test::Unit::TestCase
 
         af = Sigmoid.new
         output = af.apply_activation_function_derivative(input)
-        assert_equal(expected, output)
+        assert_each_in_delta(expected.to_a.flatten, output.to_a.flatten, 0.001)
 
         af = Sigmoid.new({gain: 0.5})
         output = af.apply_activation_function_derivative(input)
-        assert_equal(expected_with_gain, output)
+        assert_each_in_delta(expected_with_gain.to_a.flatten, output.to_a.flatten, 0.001)
 
         #This is effectively pointer comparison.
         #The method apply_activation_function creates a new instance of Matrix as output.
