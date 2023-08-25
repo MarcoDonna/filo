@@ -30,6 +30,12 @@ namespace "test" do
         t.test_files = FileList['test/loss_function/**/test_*.rb']
         t.verbose = true
     end
+
+    Rake::TestTask.new :optimizers  do |t|
+        t.libs << "test"
+        t.test_files = FileList['test/optimizer/**/test_*.rb']
+        t.verbose = true
+    end
 end
 
 
