@@ -1,7 +1,7 @@
 require_relative 'loss_function'
 require_relative '../utils/matrix'
 
-class MeanSquaredError
+class MeanSquaredError < LossFunction
 
     #Calculate the average loss across batch for each output neuron.
     def loss predicted_matrix, observed_matrix
