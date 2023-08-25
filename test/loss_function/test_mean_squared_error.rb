@@ -1,6 +1,7 @@
 require 'test/unit'
 require 'matrix'
 
+require_relative '../../lib/utils/expanded_test_assertions'
 require_relative '../../lib/loss_function/mean_squared_error'
 
 class TestMeanSquaredError < Test::Unit::TestCase
@@ -12,22 +13,17 @@ class TestMeanSquaredError < Test::Unit::TestCase
         loss_function = MeanSquaredError.new
         loss = loss_function.loss(predicted, observerd)
 
-        assert_in_delta(0.001, expected[0], loss[0])
-        assert_in_delta(0.001, expected[1], loss[1])
+        assert_each_in_delta(expected, loss, 0.001)
     end
 
     def test_loss_derivative
         predicted = Matrix[[0.2, 0.8], [0.6, -0.2]]
         observerd = Matrix[[0, 1], [1, 0]]
         expected = Matrix[[0.4, -0.4], [-0.8, -0.4]]
-        expected = expected.to_a
 
         loss_function = MeanSquaredError.new
-        loss_derivative = loss_function.loss_derivative(predicted, observerd).to_a
+        loss_derivative = loss_function.loss_derivative(predicted, observerd)
 
-        assert_in_delta(0.001, expected[0][0].abs, loss_derivative[0][0].abs)
-        assert_in_delta(0.001, expected[0][1].abs, loss_derivative[0][1].abs)
-        assert_in_delta(0.001, expected[1][0].abs, loss_derivative[1][0].abs)
-        assert_in_delta(0.001, expected[1][1].abs, loss_derivative[1][1].abs)
+        assert_each_in_delta(expected.to_a.flatten, loss_derivative.to_a.flatten, 0.001)
     end
 end
