@@ -36,6 +36,12 @@ namespace "test" do
         t.test_files = FileList['test/optimizer/**/test_*.rb']
         t.verbose = true
     end
+
+    Rake::TestTask.new :layers  do |t|
+        t.libs << "test"
+        t.test_files = FileList['test/layer/**/test_*.rb']
+        t.verbose = true
+    end
 end
 
 
