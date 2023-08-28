@@ -1,4 +1,4 @@
-class ShapeError < StandardError
+class MissingImplementationError < StandardError
     def initialize error_message=nil
         super(error_message)
     end

@@ -1,5 +1,4 @@
 require 'matrix'
-require_relative 'shape_error'
 
 class Matrix
 
