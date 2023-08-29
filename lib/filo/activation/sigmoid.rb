@@ -1,5 +1,10 @@
 module Filo
     module Activation
+
+        def self.Sigmoid config={}
+            Sigmoid.new(config)
+        end
+
         class Sigmoid < Activation
             #Sigmoid activation function
             #https://keisan.casio.com/exec/system/15157249643425
@@ -19,5 +24,6 @@ module Filo
                 function(vector).map { |x| @config[:gain] * x * (1 - x) }
             end
         end
+
     end
 end

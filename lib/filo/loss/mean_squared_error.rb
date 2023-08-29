@@ -1,5 +1,16 @@
 module Filo
     module Loss
+
+        class << self
+            
+            def MeanSquaredError config={}
+                MeanSquaredError.new(config)
+            end
+
+            alias_method :MSE, :MeanSquaredError
+
+        end
+
         class MeanSquaredError < Loss
 
             #Calculate the average loss across batch for each output neuron.
@@ -14,5 +25,6 @@ module Filo
                 Matrix[*(predicted_matrix - observed_matrix).map_row { |row| row.map { |x| 2 * x } }]
             end
         end
+
     end
 end

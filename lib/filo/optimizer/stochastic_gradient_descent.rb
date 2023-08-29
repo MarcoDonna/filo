@@ -1,5 +1,16 @@
 module Filo
     module Optimizer
+
+        class << self
+
+            def StochasticGradientDescent config={}
+                StochasticGradientDescent.new(config)
+            end
+
+            alias_method :SGD, :StochasticGradientDescent
+
+        end
+
         class StochasticGradientDescent < Optimizer
 
             def initialize config
@@ -19,5 +30,6 @@ module Filo
                 weights + gradients * -@config[:learning_rate]
             end
         end
+
     end
 end
