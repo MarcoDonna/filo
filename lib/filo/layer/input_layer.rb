@@ -1,11 +1,17 @@
 module Filo
     module Layer
+
+        def self.InputLayer size
+            InputLayer.new({size: size})
+        end
+
         class InputLayer < Layer
             attr_reader :output
 
-            def initialize size, config={}
+            def initialize config={}
                 #Input layer has no input size
-                super(nil, size, config)
+                super(config)
+                @input_size = nil
             end
 
             def forward input
@@ -16,5 +22,6 @@ module Filo
                 @output = @input
             end
         end
+        
     end
 end

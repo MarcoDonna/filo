@@ -2,10 +2,10 @@ module Filo
     module Layer
         class Layer
 
-            def initialize input_size, size, config={}
-                @input_size = input_size
-                @size = size
+            def initialize config={}
                 @config = config
+                @input_size = @config[:input_size]
+                @size = @config[:size]
             end
 
             #Input can be Matrix or Layer
@@ -18,5 +18,6 @@ module Filo
                 raise MissingImplementationError.new
             end
         end
+        
     end
 end

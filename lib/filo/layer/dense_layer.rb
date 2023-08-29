@@ -1,12 +1,16 @@
 module Filo
     module Layer
 
+        def self.DenseLayer input_size, size, config
+            DenseLayer.new(config.merge(input_size: input_size, size: size))
+        end
+
         class DenseLayer < Layer
             attr_reader :biases, :weights
             attr_reader :input, :before_activation, :output, :error
 
-            def initialize input_size, size, config={}
-                super(input_size, size, config)
+            def initialize config={}
+                super(config)
                 raise StandardError.new("No :activation_function in layer config") if @config[:activation_function].nil?
 
                 @biases = Vector.zero(@size).map { rand_weight() }
@@ -52,5 +56,6 @@ module Filo
                 rand()
             end
         end
+        
     end
 end
