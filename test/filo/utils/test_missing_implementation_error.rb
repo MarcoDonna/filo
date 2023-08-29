@@ -1,6 +1,4 @@
-require 'test/unit'
-
-require_relative '../../lib/utils/missing_implementation_error'
+require_relative '../../test_helper'
 
 class TestMissingImplementation < Test::Unit::TestCase
     def test_raise

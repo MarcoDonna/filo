@@ -1,8 +1,4 @@
-require 'test/unit'
-require 'matrix'
-
-require_relative '../../lib/utils/expanded_test_assertions'
-require_relative '../../lib/activation_function/sigmoid'
+require_relative '../../test_helper'
 
 class TestSigmoid < Test::Unit::TestCase
     def test_function
@@ -10,11 +6,11 @@ class TestSigmoid < Test::Unit::TestCase
         expected = Matrix[[0.2689414213699951207488, 0.5, 0.7310585786300048792512], [0.3775406687981454, 0.5498339973124779085592, 0.6224593312018545646389]]
         expected_with_gain = Matrix[[0.3775406687981454, 0.5, 0.6224593312018546], [0.43782349911420193, 0.52497918747894, 0.5621765008857981]]
 
-        af = Sigmoid.new
+        af = Filo::Activation.Sigmoid
         output = af.apply_activation_function(input)
         assert_each_in_delta(expected.to_a.flatten, output.to_a.flatten, 0.001)
 
-        af = Sigmoid.new({gain: 0.5})
+        af = Filo::Activation.Sigmoid({gain: 0.5})
         output = af.apply_activation_function(input)
         assert_each_in_delta(expected_with_gain.to_a.flatten, output.to_a.flatten, 0.001)
 
@@ -29,11 +25,11 @@ class TestSigmoid < Test::Unit::TestCase
         expected = Matrix[[0.1966119332414818525374, 0.25, 0.1966119332414818525374]]
         expected_with_gain = Matrix[[0.1175018561007972445347, 0.125, 0.1175018561007972445347]]
 
-        af = Sigmoid.new
+        af = Filo::Activation.Sigmoid
         output = af.apply_activation_function_derivative(input)
         assert_each_in_delta(expected.to_a.flatten, output.to_a.flatten, 0.001)
 
-        af = Sigmoid.new({gain: 0.5})
+        af = Filo::Activation.Sigmoid({gain: 0.5})
         output = af.apply_activation_function_derivative(input)
         assert_each_in_delta(expected_with_gain.to_a.flatten, output.to_a.flatten, 0.001)
 

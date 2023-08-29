@@ -1,8 +1,4 @@
-require 'test/unit'
-
-require_relative '../../lib/utils/expanded_test_assertions'
-require_relative '../../lib/utils/matrix'
-require_relative '../../lib/optimizer/stochastic_gradient_descent'
+require_relative '../../test_helper'
 
 class TestStochasticGradientDescent < Test::Unit::TestCase
 
@@ -11,7 +7,7 @@ class TestStochasticGradientDescent < Test::Unit::TestCase
         gradients = Vector[0.8, 0.3, -0.2]
         expected = Vector[0.6, -1.15, 0.6]
 
-        opt = StochasticGradientDescent.new({learning_rate: 0.5})
+        opt = Filo::Optimizer.StochasticGradientDescent({learning_rate: 0.5})
         optimized_biases = opt.optimize_biases(biases, gradients)
 
         assert_each_in_delta(expected.to_a, optimized_biases.to_a, 0.001)
@@ -22,7 +18,7 @@ class TestStochasticGradientDescent < Test::Unit::TestCase
         gradients = Matrix[[0.8, 0.3, -0.2], [0.8, 0.3, -0.2]]
         expected = Matrix[[0.6, -1.15, 0.6], [0.6, -1.15, 0.6]]
 
-        opt = StochasticGradientDescent.new({learning_rate: 0.5})
+        opt = Filo::Optimizer.StochasticGradientDescent({learning_rate: 0.5})
         optimized_weights = opt.optimize_weights(weights, gradients)
 
         assert_each_in_delta(expected.to_a.flatten,  optimized_weights.to_a.flatten, 0.001)

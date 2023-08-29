@@ -1,7 +1,4 @@
-require 'test/unit'
-
-require_relative '../../lib/utils/matrix'
-require_relative '../../lib/utils/shape_error'
+require_relative '../../test_helper'
 
 class TestMatrix < Test::Unit::TestCase
     def test_kronecker_delta
