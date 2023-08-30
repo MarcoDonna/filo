@@ -22,6 +22,8 @@ module Filo
             end
 
             def backprop target
+                raise ShapeError.new unless target.column_size == @output.column_size and target.row_size == @output.row_size
+
                 @target = target
                 @loss_metric << @config[:loss_function].loss(@output, @target)
                 @error = @config[:activation_function].apply_activation_function_derivative(@before_activation).hadamard_product(@output - @target)
