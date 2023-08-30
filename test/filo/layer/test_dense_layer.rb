@@ -1,8 +1,11 @@
 require_relative '../../test_helper'
 
 class TestDenseLayer < Test::Unit::TestCase
-    def test_missing_activation_function
-        assert_raise(StandardError) { Filo::Layer.DenseLayer(3, 3) }
+    def test_missing_bad_arguments
+        assert_raise(InvalidArgumentError) { Filo::Layer.DenseLayer(3, 3) }
+        assert_raise(InvalidArgumentError) { Filo::Layer.DenseLayer(3) }
+        assert_raise(InvalidArgumentError) { Filo::Layer.DenseLayer() }
+        assert_raise(InvalidArgumentError) { Filo::Layer.DenseLayer(1, 2, 3, 4) }
     end
 
     def test_set_parameters

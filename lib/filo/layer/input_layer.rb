@@ -1,8 +1,14 @@
 module Filo
     module Layer
 
-        def self.InputLayer size
-            InputLayer.new({size: size})
+        def self.InputLayer *args
+            if args[0].is_a?(Hash)
+                InputLayer.new(args[0])
+            elsif args[0].is_a?(Numeric)
+                InputLayer({size: args[0]})
+            else
+                raise InvalidArgumentError.new
+            end
         end
 
         class InputLayer < Layer
@@ -22,6 +28,6 @@ module Filo
                 @output = @input
             end
         end
-        
+
     end
 end

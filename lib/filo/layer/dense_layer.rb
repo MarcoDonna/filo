@@ -1,8 +1,14 @@
 module Filo
     module Layer
 
-        def self.DenseLayer input_size, size, config
-            DenseLayer.new(config.merge(input_size: input_size, size: size))
+        def self.DenseLayer *args
+            if args.size == 1 and args[0].is_a?(Hash)
+                DenseLayer.new(args[0])
+            elsif args.size == 3 and args[2].is_a?(Hash)
+                DenseLayer(args[2].merge(input_size: args[0], size: args[1]))
+            else
+                raise InvalidArgumentError.new
+            end
         end
 
         class DenseLayer < Layer
@@ -11,7 +17,7 @@ module Filo
 
             def initialize config={}
                 super(config)
-                raise StandardError.new("No :activation_function in layer config") if @config[:activation_function].nil?
+                raise InvalidArgumentError.new("No :activation_function in layer config") if @config[:activation_function].nil?
 
                 @biases = Vector.zero(@size).map { rand_weight() }
                 @weights = Matrix.build(@size, @input_size) { rand_weight() }
@@ -56,6 +62,6 @@ module Filo
                 rand()
             end
         end
-        
+
     end
 end
