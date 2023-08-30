@@ -1,4 +1,4 @@
-require_relative 'filo/extension/matrix'
+require_relative 'filo/extensions/matrix'
 
 require_relative 'filo/utils/missing_implementation_error'
 require_relative 'filo/utils/shape_error'
