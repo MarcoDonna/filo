@@ -8,3 +8,9 @@ require_relative 'filo/activation'
 require_relative 'filo/layer'
 require_relative 'filo/loss'
 require_relative 'filo/optimizer'
+
+module Filo
+
+    VERSION = '0.0.0'
+
+end
