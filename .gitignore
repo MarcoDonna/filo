@@ -1,4 +1,12 @@
 .env
+.gem
 .byebug_history
+.ruby-version
+
+/data/
+/tmp/
+/pkg/
+/filo/
 
 *.data.*
+*.config.*
