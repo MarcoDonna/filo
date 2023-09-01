@@ -53,12 +53,12 @@ module Filo
             end
 
             def weights_gradient
-                @error.t * @input
+                @error.t * @input / @output.row_size
             end
 
             def biases_gradient
-                #Sum error over batch
-                Vector[*@error.t.map_row { |row| row.reduce(0) { |acc, val| acc + val } }]
+                #Sum error over batch, divide by @output.row_size to get average over batch
+                Vector[*@error.t.map_row { |row| row.reduce(0) { |acc, val| acc + val } }] / @output.row_size
             end
 
             private
