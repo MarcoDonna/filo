@@ -1,6 +1,7 @@
 module Filo
     module Layer
         class Layer
+            attr_reader :size, :input_size
 
             def initialize config={}
                 @config = config
@@ -18,6 +19,6 @@ module Filo
                 raise MissingImplementationError.new
             end
         end
-        
+
     end
 end
