@@ -8,6 +8,7 @@ require_relative 'filo/activation'
 require_relative 'filo/layer'
 require_relative 'filo/loss'
 require_relative 'filo/optimizer'
+require_relative 'filo/neural_network'
 
 module Filo
 
