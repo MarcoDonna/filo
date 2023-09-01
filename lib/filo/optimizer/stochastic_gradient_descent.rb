@@ -18,11 +18,15 @@ module Filo
                 @config[:learning_rate] = 0.01 if @config[:learning_rate].nil?
             end
 
+            def optimize_vector vec_w, vec_g
+                vec_w + vec_g * -@config[:learning_rate]
+            end
+
             #Use SGD to optimize a Vector af biases using a Vector of gradients.
             def optimize_biases biases, gradients
                 #delta = -gradient * lr
                 #bias = bias + delta
-                biases + gradients * -@config[:learning_rate]
+                optimize_vector(biases, gradients)
             end
 
             #Use SGD top optimize a Matrix of weights using a Matrix of gradients
