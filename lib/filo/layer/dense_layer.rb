@@ -43,6 +43,11 @@ module Filo
                 @error = @config[:activation_function].apply_activation_function_derivative(@before_activation).hadamard_product(next_layer.weighted_error)
             end
 
+            def optimize
+                @biases = @config[:optimizer].optimize_weights(@biases, biases_gradient)
+                @weights = @config[:optimizer].optimize_weights(@weights, weights_gradient)
+            end
+
             def weighted_error
                 @error * @weights
             end

@@ -28,6 +28,12 @@ module Filo
                 @loss_metric << @config[:loss_function].loss(@output, @target)
                 @error = @config[:activation_function].apply_activation_function_derivative(@before_activation).hadamard_product(@output - @target)
             end
+
+            def optimize
+                @biases = @config[:optimizer].optimize_weights(@biases, biases_gradient)
+                @weights = @config[:optimizer].optimize_weights(@weights, weights_gradient)
+            end
+
         end
 
     end
