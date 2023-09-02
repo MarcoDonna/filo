@@ -36,7 +36,8 @@ namespace :gem do
     desc 'install the gem built from local source code'
     task :install => [:build] do
         cd 'pkg'
-        sh "gem install --local filo-#{Filo::VERSION}.gem"
+        # --local
+        sh "gem install filo-#{Filo::VERSION}.gem"
         cd '..'
     end
 
