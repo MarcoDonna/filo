@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
 
     # Requirements and dependencies
     s.required_ruby_version = '>= 3.0.0'
+    s.add_dependency 'ractor', '~> 0.2.0'
 
     # Files and Directories
     # The files added in the gem are the same that have been addedto git (git ls-files -z)
