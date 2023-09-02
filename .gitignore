@@ -2,6 +2,7 @@
 .gem
 .byebug_history
 .ruby-version
+Gemfile.lock
 
 /data/
 /tmp/
