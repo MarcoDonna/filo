@@ -16,7 +16,7 @@ require 'matrix'
 require 'ractor'
 
 class Matrix
-    RACTOR = true
+    RACTOR = false
     RACTOR_CORES = 4
 
     def self.kronecker_delta diagonal_size
