@@ -1,7 +1,7 @@
 require 'rake/testtask'
 require 'rubygems/package_task'
 
-require_relative 'lib/filo'
+require_relative 'lib/filo/version'
 
 #https://ruby-doc.org/stdlib-3.1.0/libdoc/rake/rdoc/rake-13_0_6/doc/rakefile_rdoc.html
 #https://docs.ruby-lang.org/en/2.1.0/Rake/TestTask.html
