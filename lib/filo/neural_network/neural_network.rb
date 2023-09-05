@@ -48,6 +48,11 @@ module Filo
                     backprop(target)
                     optimize()
                 end
+                # Check for average output layer target loss exit condition
+                unless options[:target_loss].nil?
+                    avg_loss_at_timestep = output_layer.loss_metric.last.inject(0) { |acc, val| acc + val} / output_layer.size
+                    return if avg_loss_at_timestep <= options[:target_loss]
+                end
             end
         end
 
