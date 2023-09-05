@@ -6,6 +6,10 @@ module Filo
                 @config = config
             end
 
+            def update_config new_config={}
+                @config = @config.merge(new_config)
+            end
+
             def optimize_vector vec_w, vec_g
                 raise MissingImplementationError.new
             end
