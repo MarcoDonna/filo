@@ -34,20 +34,31 @@ module Filo
         end
 
         def train input, target, options
+            # Split data in  batches if batch_size or batches is set
+            options[:batch_size] = input.row_size if options[:batch_size].nil?
+            options[:batch_size] = (input.row_size / options[:batches].to_f) unless options[:batches].nil?
+            input_batches = input.to_a.each_slice(options[:batch_size]).map { |mat| Matrix[*mat] }
+            target_batches = target.to_a.each_slice(options[:batch_size]).map { |mat| Matrix[*mat] }
+
+            training_pairs = input_batches.zip(target_batches)
+
             options[:epochs].times do
-                forward(input)
-                backprop(target)
-                optimize()
+                training_pairs.each do |input, target|
+                    forward(input)
+                    backprop(target)
+                    optimize()
+                end
             end
         end
 
         def forward input
-            output = input_layer.forward(input)
+            input_layer.forward(input)
             # Each layer except input layer
             (@depth - 1).times do |layer_index|
                 layer_index = layer_index + 1
                 @layers[layer_index].forward(@layers[layer_index - 1])
             end
+            return output
         end
 
         def backprop target
