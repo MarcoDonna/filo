@@ -20,10 +20,8 @@ Gem::Specification.new do |s|
     s.add_dependency 'ractor', '~> 0.2.0'
 
     # Files and Directories
-    # The files added in the gem are the same that have been addedto git (git ls-files -z)
-    s.files = Dir.chdir(File.expand_path(__dir__)) do
-        `git ls-files -z`.split("\x0")
-    end
+    # The files added in the gem are the same that have been addedto git (git ls-files -z), exclude some directories (use (example|test) to exlcude mutiple directories).
+    s.files = FileList[Dir.chdir(File.expand_path(__dir__)) { `git ls-files -z`.split("\x0") }].exclude(/^(example)/)
 
     # Gem Specification Configuration
     # Specify the directory where executables files included in the gem should be installed
