@@ -19,6 +19,9 @@ class Matrix
     RACTOR = false
     RACTOR_CORES = 4
 
+    alias_method :width, :column_size
+    alias_method :height, :row_size
+
     def self.kronecker_delta diagonal_size
         Matrix[*Matrix.zero(diagonal_size).map_row { |row, idx| row[idx] = 1; row }]
     end
