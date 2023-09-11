@@ -14,10 +14,15 @@ module Filo
                 Matrix[*matrix.clone().to_a.map { |row| function(row) }]
             end
 
-            #Apply activation function derivative to each row of the matrix.
-            #Applied to each row insted of single item is needed is some activation functions (softmax).
+            # Apply activation function derivative to each row of the matrix.
+            # Applied to each row insted of single item is needed is some activation functions (softmax).
+            # The output is converted to Matrix only if the derivative is not jacobian
             def apply_activation_function_derivative matrix
-                Matrix[*matrix.clone().to_a.map { |row| derivative(row) }]
+                if(respond_to?(:jacobian?) and jacobian? === true)
+                    matrix.clone().to_a.map { |row| derivative(row) }
+                else
+                    Matrix[*matrix.clone().to_a.map { |row| derivative(row) }]
+                end
             end
 
             private
