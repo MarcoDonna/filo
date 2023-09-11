@@ -21,7 +21,7 @@ end
 namespace :gem do
 
     desc 'package the gem'
-    task :build => [:package]
+    task :build => [:clean, :package]
 
     Gem::PackageTask.new(Gem::Specification.load('filo.gemspec')) do |pkg|
         pkg.need_tar = true # Specify if you want to generate a tar file
