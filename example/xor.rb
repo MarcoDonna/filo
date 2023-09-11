@@ -1,7 +1,4 @@
-require_relative '../lib/filo'
-#require 'filo'
-
-require 'byebug'
+require 'filo'
 
 # Defining training data features
 xor_f = Matrix[
