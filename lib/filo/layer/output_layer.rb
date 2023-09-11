@@ -26,7 +26,19 @@ module Filo
 
                 @target = target
                 @loss_metric << @config[:loss_function].loss(@output, @target)
-                @error = @config[:activation_function].apply_activation_function_derivative(@before_activation).hadamard_product(@output - @target)
+                loss_gradient = @config[:loss_function].loss_derivative(@output, @target)
+                # Check if the derivative of the activation function is a Vector (sigmoid) or a Matrix (softplus)
+                # Somet things need to change, maybe have method of the activation functions that tells us what the expected output is
+                if(@config[:activation_function].respond_to?(:jacobian?) and @config[:activation_function].jacobian? === true)
+                    # Softmax like activation function derivative
+                    applied_activation_derivative = @config[:activation_function].apply_activation_function_derivative(@before_activation)
+                    # Each item inside applied_activation_derivative is a Matrix, each Matrix is the derivative of one item in the batch.
+                    # For each Matrix, perform matrix-vector multiplication to compute the error of the output layer
+                    @error = Matrix[*applied_activation_derivative.map.with_index { |matrix, i| matrix * Vector[*loss_gradient.to_a[i]] }]
+                else
+                    # Sigmoid like activation function derivative
+                    @error = @config[:activation_function].apply_activation_function_derivative(@before_activation).hadamard_product(loss_gradient)
+                end
             end
 
             def optimize
