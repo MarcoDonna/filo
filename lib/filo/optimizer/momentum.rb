@@ -29,7 +29,7 @@ module Filo
             # call-seq:
             # optimize_vector(Vector, Vector) -> Vector
             #
-            # Use SGD to optimize a generic Vector of weights using a Vector of gradients
+            # Use Momentum to optimize a generic Vector of weights using a Vector of gradients
             def optimize_biases biases, gradients
                 #delta = lr * gradient + momentum * momentum_factor
                 #momentum = delta
@@ -44,14 +44,21 @@ module Filo
             # call-seq:
             # optimize_vector(Vector, Vector) -> Vector
             #
-            # Use SGD to optimize a generic Vector of weights using a Vector of gradients or a Matrix of weights using a Matrix of gradients.
+            # Use Momentum to optimize a generic Vector of weights using a Vector of gradients or a Matrix of weights using a Matrix of gradients.
             #
             def optimize_weights weights, gradients
-                @weights_momentum = Vector.zero(weights.size) if @weights_momentum.nil?
+                case weights
+                when Matrix
+                    # TODO
+                when Vector
+                    @weights_momentum = Vector.zero(weights.size) if @weights_momentum.nil?
 
-                delta = @config[:learning_rate] * gradients + @weights_momentum * @config[:momentum]
-                @weights_momentum = delta
-                return weights - delta
+                    delta = @config[:learning_rate] * gradients + @weights_momentum * @config[:momentum]
+                    @weights_momentum = delta
+                    return weights - delta
+                else
+                    raise InvalidArgumentError.new
+                end
             end
         end
 
