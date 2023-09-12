@@ -1,13 +1,16 @@
 module Filo
     module Activation
 
+        # call-seq:
+        # Softmax(config={}) -> Filo::Activation::Softmax
+        #
+        # Returns a new instance of Softmax activation functions.
+        #
         def self.Softmax config={}
             Softmax.new(config)
         end
 
-        class Softmax < Activation
-            # Softmax activation function and derivative
-            #
+        class Softmax < Activation # :nodoc:
 
             def initialize config={}
                 super(config)

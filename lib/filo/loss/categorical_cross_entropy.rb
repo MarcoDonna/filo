@@ -3,17 +3,24 @@ module Filo
 
         class << self
 
+            #   loss_function = Filo::Loss.CategoricalCrossEntropy
+            #
+            # Returns a new instance of Categorical Cross Entropy loss functions
+            #
             def CategoricalCrossEntropy config={}
                 CategoricalCrossEntropy.new(config)
             end
-
             alias_method :CCE, :CategoricalCrossEntropy
 
         end
 
-        class CategoricalCrossEntropy < Loss
+        class CategoricalCrossEntropy < Loss # :nodoc:
 
-            #Calculate the average loss across batch for each output neuron.
+            # call-seq:
+            # loss(Matrix, Matrix) -> Array
+            #
+            # Calculate the average loss across batch for each output neuron. Using Categorical Cross Entropy.
+            #
             def loss predicted_matrix, observed_matrix
                 log_predicted_matrix = Matrix[*predicted_matrix.map_row { |row| row.map { |x| Math.log(x) }}]
                 log_predicted_matrix.hadamard_product(observed_matrix).t.map_row do |row|
@@ -21,7 +28,11 @@ module Filo
                 end
             end
 
-            #For each batch item and each output neuron, there will be a corresponding derivative value.
+            # call-seq:
+            # loss_derivative(Matrix, Matrix) -> Matrix
+            #
+            # For each batch item and each output neuron, there will be a corresponding derivative value.
+            #
             def loss_derivative predicted_matrix, observed_matrix
                 inverse_predicted = Matrix[*predicted_matrix.map_row { |row| row.map { |x| -1.0/x }}]
                 observed_matrix.hadamard_product(inverse_predicted)

@@ -1,6 +1,15 @@
 module Filo
     module Layer
 
+        # call-seq:
+        # OutputLayer(input_size: Numeric, size: Numeric, activation_function: Activation, loss_function: Loss, optimizer: Optimzer=nil) -> Filo::Layer::OutputLayer
+        # OutputLayer(Numeric input_size, Numeric size, config={}) -> Filo::Layer::OutputLayer
+        #
+        #   output_layer = Filo::Layer.OutputLayer(2, 4, activation_function: Filo::Activation.Sigmoid, loss_function: Filo::Loss.MSE)
+        #   output_layer = Filo::Layer.OutputLayer(input_size: 2, size: 4, activation_function: Filo::Activation.Sigmoid, loss_function: Filo::Loss.MSE)
+        #
+        # Returns a new Intance of OutputLayer.
+        #
         def self.OutputLayer *args
             if args.size == 1 and args[0].is_a?(Hash)
                 OutputLayer.new(args[0])
@@ -14,13 +23,20 @@ module Filo
         class OutputLayer < DenseLayer
             attr_reader :loss_metric
 
-            def initialize config={}
+            def initialize config={} # :notnew:
                 super(config)
                 raise InvalidArgumentError.new("No :loss_function in layer config") if @config[:loss_function].nil?
 
                 @loss_metric = []
             end
 
+            # call-seq:
+            # backprop(Layer)
+            #
+            # Computes the @error of the layer using backpropagation formula and the loss function derivative.
+            #
+            # Loss function derivative can be both a Matrix or jacobian (an Array of Matrix).
+            #
             def backprop target
                 raise ShapeError.new unless target.column_size == @output.column_size and target.row_size == @output.row_size
 
@@ -40,12 +56,6 @@ module Filo
                     @error = @config[:activation_function].apply_activation_function_derivative(@before_activation).hadamard_product(loss_gradient)
                 end
             end
-
-            def optimize
-                @biases = @config[:optimizer].optimize_weights(@biases, biases_gradient)
-                @weights = @config[:optimizer].optimize_weights(@weights, weights_gradient)
-            end
-
         end
 
     end

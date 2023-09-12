@@ -1,13 +1,16 @@
 module Filo
     module Activation
 
+        # call-seq:
+        # Sigmoid(gain: 1) -> Filo::Activation::Sigmoid
+        #
+        # Returns a new instance of Sigmoid activation functions.
+        #
         def self.Sigmoid config={}
             Sigmoid.new(config)
         end
 
-        class Sigmoid < Activation
-            #Sigmoid activation function
-            #https://keisan.casio.com/exec/system/15157249643425
+        class Sigmoid < Activation # :nodoc:
 
             def initialize config={}
                 super(config)

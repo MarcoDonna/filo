@@ -1,6 +1,7 @@
 module Filo
     module Layer
-        class Layer
+
+        class Layer # :nodoc:
             attr_reader :size, :input_size
 
             def initialize config={}
@@ -9,12 +10,10 @@ module Filo
                 @size = @config[:size]
             end
 
-            #Input can be Matrix or Layer
             def forward input
                 raise MissingImplementationError.new
             end
 
-            #Can backprop deltas or layer
             def backprop error
                 raise MissingImplementationError.new
             end

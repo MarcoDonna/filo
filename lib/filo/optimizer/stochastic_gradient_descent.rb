@@ -3,35 +3,61 @@ module Filo
 
         class << self
 
+            # call-seq:
+            # StochasticGradientDescent(learning_rate: 0.01)
+            #
+            #   Filo::Optimizer.StochasticGradientDescent(learning_rate: 0.1)
+            #
+            # Returns a new Instance of Stochastic Gradient Descent optimizer
+            #
             def StochasticGradientDescent config={}
                 StochasticGradientDescent.new(config)
             end
-
             alias_method :SGD, :StochasticGradientDescent
 
         end
 
-        class StochasticGradientDescent < Optimizer
+        class StochasticGradientDescent < Optimizer # :nodoc:
 
-            def initialize config
+            def initialize config # :notnew:
                 super(config)
                 @config[:learning_rate] = 0.01 if @config[:learning_rate].nil?
             end
 
-            def optimize_vector vec_w, vec_g
-                vec_w + vec_g * -@config[:learning_rate]
-            end
-
-            #Use SGD to optimize a Vector af biases using a Vector of gradients.
+            # call-seq:
+            # optimize_vector(Vector, Vector) -> Vector
+            #
+            # Use SGD to optimize a generic Vector of weights using a Vector of gradients
             def optimize_biases biases, gradients
                 #delta = -gradient * lr
                 #bias = bias + delta
                 optimize_vector(biases, gradients)
             end
 
-            #Use SGD top optimize a Matrix of weights using a Matrix of gradients
+            # call-seq:
+            # optimize_vector(Vector, Vector) -> Vector
+            #
+            # Use SGD to optimize a generic Vector of weights using a Vector of gradients or a Matrix of weights using a Matrix of gradients.
+            #
             def optimize_weights weights, gradients
-                weights + gradients * -@config[:learning_rate]
+                case  weights
+                when Vector
+                    optimize_vector(weights, gradients)
+                when Matrix
+                    weights + gradients * -@config[:learning_rate]
+                else
+                    raise InvalidArgumentError.new
+                end
+            end
+
+            private
+
+            # call-seq:
+            # optimize_vector(Vector, Vector) -> Vector
+            #
+            # Use SGD to optimize a generic Vector of weights using a Vector of gradients
+            def optimize_vector vec_w, vec_g
+                vec_w + vec_g * -@config[:learning_rate]
             end
         end
 

@@ -1,4 +1,4 @@
-class InvalidArgumentError < StandardError
+class InvalidArgumentError < StandardError # :nodoc:
     def initialize message=nil
         super(message)
     end

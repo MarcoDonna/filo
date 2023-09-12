@@ -1,22 +1,35 @@
 module Filo
     module Activation
-        #Parent class to all activation functions.
-        #Each activation function inherits this class and implements the function and derivative methods
+
         class Activation
 
-            def initialize config={}
+            def initialize config={} # :notnew:
                 @config = config
             end
 
-            #Apply activation function to each row of the matrix.
-            #Applied to each row insted of single item is needed is some activation functions (softmax).
+            # call-seq:
+            # apply_activation_function(Matrix) -> Matrix
+            #
+            # Applies +function+ to each row of matrix.
+            #
+            # This method is inherited and used by the activation functions, and each activation function implements it's
+            # own +function+ method.
+            #
             def apply_activation_function matrix
                 Matrix[*matrix.clone().to_a.map { |row| function(row) }]
             end
 
-            # Apply activation function derivative to each row of the matrix.
-            # Applied to each row insted of single item is needed is some activation functions (softmax).
-            # The output is converted to Matrix only if the derivative is not jacobian
+            # call-seq:
+            # apply_activation_function_derivative(Matrix) -> Matrix
+            # apply_activation_function_derivative(Matrix) -> Array
+            #
+            # Applies +derivative+ to each row of matrix.
+            #
+            # If the activation function is jacobian, returns an Array of the jacobian Matrices (one for each row).
+            #
+            # This method is inherited and used by the activation functions, and each activation function implements it's
+            # own +derivative+ method.
+            #
             def apply_activation_function_derivative matrix
                 if(respond_to?(:jacobian?) and jacobian? === true)
                     matrix.clone().to_a.map { |row| derivative(row) }
@@ -25,15 +38,26 @@ module Filo
                 end
             end
 
+            # call-seq:
+            # jacobian? -> boolean
+            #
+            # Return true if the derivative of the activation faction is jacobian, false if not.
+            # This is set by each implementations of activation functions.
+            #
+            def jacobian?
+                false
+            end
+
             private
 
-            def function vector
+            def function vector # :nodoc:
                 raise MissingImplementationError.new
             end
 
-            def derivative vector
+            def derivative vector # :nodoc:
                 raise MissingImplementationError.new
             end
         end
+
     end
 end
