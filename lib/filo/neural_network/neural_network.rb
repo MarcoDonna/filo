@@ -64,7 +64,8 @@ module Filo
 
             training_pairs = input_batches.zip(target_batches)
 
-            options[:epochs].times do
+            options[:epochs].times do |e|
+                p e if options[:debug] === true
                 training_pairs.each do |input, target|
                     forward(input)
                     backprop(target)
