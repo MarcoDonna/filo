@@ -43,4 +43,18 @@ class TestMatrix < Test::Unit::TestCase
         assert_raise(ShapeError) { m.add_vector(Vector[2], :column) }
         assert_equal(Matrix[[1, 1], [2, 2]], m.add_vector(Vector[1, -1], :column))
     end
+
+    def test_vector_to_matrix
+        vector = Vector[1, 2, 3, 4, 5, 6]
+        expected = Matrix[[1, 2], [3, 4], [5, 6]]
+
+        assert_equal(expected, vector.unflatten(2))
+    end
+
+    def test_matrix_to_vector
+        matrix = Matrix[[1, 2], [3, 4], [5, 6]]
+        expected = Vector[1, 2, 3, 4, 5, 6]
+
+        assert_equal(expected, matrix.flatten)
+    end
 end

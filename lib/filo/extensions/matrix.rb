@@ -14,9 +14,6 @@
 # limitations under the License.
 #++
 
-require 'matrix'
-require 'ractor'
-
 # Extend Matrix class with addictional functionalities, and maybe in the future GPGPU and Ractor support.
 #
 class Matrix
@@ -69,6 +66,10 @@ class Matrix
         else
             raise InvalidArgumentError.new
         end
+    end
+
+    def flatten
+        return self.to_a.flatten.to_vector
     end
 
 end
@@ -130,6 +131,10 @@ class Vector # :nodoc:
         else
             old_plus(v)
         end
+    end
+
+    def unflatten columns
+        return self.each_slice(columns).to_a.to_matrix
     end
 
 end
