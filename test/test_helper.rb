@@ -1,12 +1,12 @@
 require 'test/unit'
 
-require_relative '../lib/filo.rb'
+require_relative '../lib/filo'
 
 module Test::Unit::Assertions
 
     def assert_each_in_delta expected, actual, delta=0.001, message=""
         _wrap_assertion do
-            pass = expected.zip(actual).reduce(true) { |acc, pair| acc and ((pair[0] - pair[1]).abs <= delta) }
+            pass = expected.to_a.flatten.zip(actual.to_a.flatten).reduce(true) { |acc, pair| acc and ((pair[0] - pair[1]).abs <= delta) }
             full_message = _assert_each_in_delta_message(expected, expected, actual, actual, delta, delta, message)
 
             assert_block(full_message) { pass }

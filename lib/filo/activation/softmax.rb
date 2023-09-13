@@ -6,15 +6,11 @@ module Filo
         #
         # Returns a new instance of Softmax activation functions.
         #
-        def self.Softmax config={}
-            Softmax.new(config)
+        def self.Softmax
+            return Softmax.new
         end
 
         class Softmax < Activation # :nodoc:
-
-            def initialize config={}
-                super(config)
-            end
 
             def jacobian?
                 true
@@ -30,11 +26,12 @@ module Filo
                 exp_sum = exp_values.sum
 
                 # Calculate softmax probabilities
-                Vector[*exp_values.map { |exp| exp / exp_sum }]
+                return exp_values.map { |exp| exp / exp_sum }.to_vector
             end
 
             def derivative vector
                 # Calculate the softmax probabilities
+                # https://stats.stackexchange.com/questions/453539/softmax-derivative-implementation
                 softmax_probs = function(vector)
 
                 # Calculate the Kronecker delta matrix
@@ -44,7 +41,7 @@ module Filo
                     end
                 end
 
-                Matrix[*delta_matrix]
+                return delta_matrix.to_matrix
             end
         end
 

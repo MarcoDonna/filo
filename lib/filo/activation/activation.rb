@@ -3,10 +3,6 @@ module Filo
 
         class Activation
 
-            def initialize config={} # :notnew:
-                @config = config
-            end
-
             # call-seq:
             # apply_activation_function(Matrix) -> Matrix
             #
@@ -16,7 +12,7 @@ module Filo
             # own +function+ method.
             #
             def apply_activation_function matrix
-                Matrix[*matrix.clone().to_a.map { |row| function(row) }]
+                return matrix.map_row { |row| function(row) }.to_matrix
             end
 
             # call-seq:
@@ -32,9 +28,9 @@ module Filo
             #
             def apply_activation_function_derivative matrix
                 if(respond_to?(:jacobian?) and jacobian? === true)
-                    matrix.clone().to_a.map { |row| derivative(row) }
+                    return matrix.map_row { |row| derivative(row) }
                 else
-                    Matrix[*matrix.clone().to_a.map { |row| derivative(row) }]
+                    return matrix.map_row { |row| derivative(row) }
                 end
             end
 
@@ -45,7 +41,7 @@ module Filo
             # This is set by each implementations of activation functions.
             #
             def jacobian?
-                false
+                return false
             end
 
             private

@@ -6,25 +6,26 @@ module Filo
         #
         # Returns a new instance of Sigmoid activation functions.
         #
-        def self.Sigmoid config={}
-            Sigmoid.new(config)
+        def self.Sigmoid gain: 1
+            Sigmoid.new(gain: gain)
         end
 
         class Sigmoid < Activation # :nodoc:
 
-            def initialize config={}
-                super(config)
-                @config[:gain] = 1 if @config[:gain].nil?
+            protected
+
+            def initialize config
+                @gain = config[:gain]
             end
 
             private
 
             def function vector
-                vector.map { |x| 1 / (1 + Math.exp(-x * @config[:gain])) }
+                return vector.map { |x| 1 / (1 + Math.exp(-x * @gain)) }
             end
 
             def derivative vector
-                function(vector).map { |x| @config[:gain] * x * (1 - x) }
+                return function(vector).map { |x| @gain * x * (1 - x) }
             end
         end
 
