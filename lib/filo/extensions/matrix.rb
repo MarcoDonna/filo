@@ -133,6 +133,10 @@ class Vector # :nodoc:
         end
     end
 
+    def outer_product vector
+        return self.to_a.product(vector.to_a).collect { |a, b| a * b }.to_vector.unflatten(size())
+    end
+
     def unflatten columns
         return self.each_slice(columns).to_a.to_matrix
     end

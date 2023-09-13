@@ -57,4 +57,13 @@ class TestMatrix < Test::Unit::TestCase
 
         assert_equal(expected, matrix.flatten)
     end
+
+    def test_vector_outer_product
+        a = Vector[1, 2, 3]
+        b = Vector[4, 5, 6]
+
+        expected = Matrix[[4, 5, 6], [8, 10, 12], [12, 15, 18]]
+
+        assert_equal(expected, a.outer_product(b))
+    end
 end
