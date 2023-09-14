@@ -3,15 +3,11 @@ module Filo
 
         class Loss # :nodoc:
 
-            def initialize(config={})
-                @config = config
-            end
-
-            def loss predicted_matrix, actual_matrix
+            def loss predicted: nil, observed: nil
                 raise MissingImplementationError.new
             end
 
-            def loss_derivative predicted_matrix, actual_matrix
+            def loss_derivative predicted: nil, observed: nil
                 raise MissingImplementationError.new
             end
         end

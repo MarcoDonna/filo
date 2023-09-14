@@ -7,8 +7,8 @@ module Filo
             #
             # Returns a new instance of Categorical Cross Entropy loss functions
             #
-            def CategoricalCrossEntropy config={}
-                CategoricalCrossEntropy.new(config)
+            def CategoricalCrossEntropy
+                CategoricalCrossEntropy.new
             end
             alias_method :CCE, :CategoricalCrossEntropy
 
@@ -16,26 +16,24 @@ module Filo
 
         class CategoricalCrossEntropy < Loss # :nodoc:
 
-            # call-seq:
-            # loss(Matrix, Matrix) -> Array
-            #
             # Calculate the average loss across batch for each output neuron. Using Categorical Cross Entropy.
             #
-            def loss predicted_matrix, observed_matrix
-                log_predicted_matrix = Matrix[*predicted_matrix.map_row { |row| row.map { |x| Math.log(x) }}]
-                log_predicted_matrix.hadamard_product(observed_matrix).t.map_row do |row|
-                    -row.inject(0) { |acc, val| acc + val } / row.size
-                end
+            def loss predicted: nil, observed: nil
+                raise ArgumentError.new if predicted.nil? or observed.nil?
+
+                log_predicted = predicted.map_row { |row| row.map { |x| Math.log(x) }}
+                element_wise = log_predicted.to_matrix.hadamard_product(observed)
+
+                return element_wise.t.map_row { |row| -row.sum }
             end
 
-            # call-seq:
-            # loss_derivative(Matrix, Matrix) -> Matrix
-            #
             # For each batch item and each output neuron, there will be a corresponding derivative value.
             #
-            def loss_derivative predicted_matrix, observed_matrix
-                inverse_predicted = Matrix[*predicted_matrix.map_row { |row| row.map { |x| -1.0/x }}]
-                observed_matrix.hadamard_product(inverse_predicted)
+            def loss_derivative predicted: nil, observed: nil
+                raise ArgumentError.new if predicted.nil? or observed.nil?
+
+                inverse_predicted = predicted.map_row { |row| row.map { |x| -1.0/x }}
+                return inverse_predicted.to_matrix.hadamard_product(observed)
             end
         end
 
