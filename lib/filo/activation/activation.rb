@@ -30,7 +30,7 @@ module Filo
                 if(respond_to?(:jacobian?) and jacobian? === true)
                     return matrix.map_row { |row| derivative(row) }
                 else
-                    return matrix.map_row { |row| derivative(row) }
+                    return matrix.map_row { |row| derivative(row) }.to_matrix
                 end
             end
 
