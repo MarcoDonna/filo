@@ -33,7 +33,7 @@ end
 module Filo::Layer
 
     class Layer
-        attr_accessor :input, :output, :error
+        attr_accessor :input, :output, :error, :before_activation
     end
 
 end

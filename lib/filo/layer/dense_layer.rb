@@ -10,31 +10,29 @@ module Filo
         #
         # Returns a new Intance of DenseLayer.
         #
-        def self.DenseLayer *args
-            if args.size == 1 and args[0].is_a?(Hash)
-                DenseLayer.new(args[0])
-            elsif args.size == 3 and args[2].is_a?(Hash)
-                DenseLayer(args[2].merge(input_size: args[0], size: args[1]))
-            else
-                raise InvalidArgumentError.new
-            end
+        def self.DenseLayer input_size: nil, size: nil, activation_function: nil, optimizer: nil
+            return DenseLayer.new(input_size: input_size,
+                                  size: size,
+                                  activation_function: activation_function,
+                                  optimizer: optimizer)
         end
 
         class DenseLayer < Layer
             attr_reader :biases, :weights # :nodoc:
             attr_reader :input, :before_activation, :output, :error # :nodoc:
 
-            def initialize config={} # :notnew:
-                super(config)
-                raise InvalidArgumentError.new("No :activation_function in layer config") if @config[:activation_function].nil?
+            def initialize input_size: nil, size: nil, activation_function: nil, optimizer: nil # :notnew:
+                raise ArgumentError.new if input_size.nil? or size.nil? or activation_function.nil?
+
+                @input_size = input_size
+                @size = size
+                @activation_function = activation_function
+                @optimizer = optimizer
 
                 @biases = Vector.zero(@size).map { rand_weight() }
                 @weights = Matrix.build(@size, @input_size) { rand_weight() }
             end
 
-            # call-seq:
-            # biases=(Vector)
-            #
             # Set the layer biases to be the Vector passed as argument.
             #
             def biases= biases
@@ -42,9 +40,6 @@ module Filo
                 @biases = biases
             end
 
-            # call-seq:
-            # weights=(Matrix)
-            #
             # Set the layer weights to be the Matrix passed as arguments.
             #
             def weights= weights
@@ -62,18 +57,16 @@ module Filo
             def forward prev_layer
                 @input = prev_layer.output
                 @before_activation = (@input * @weights.t).add_vector(@biases)
-                @output = @config[:activation_function].apply_activation_function(@before_activation)
+                @output = @activation_function.apply_activation_function(@before_activation)
+                return @output
             end
 
-            # call-seq:
-            # backprop(Layer)
-            #
             # Computes the @error of the layer using backpropagation formula.
             #
             # Backprop pass simplified is f'(before_activation) * next_layer.weighted_error.
             #
             def backprop next_layer
-                @error = @config[:activation_function].apply_activation_function_derivative(@before_activation).hadamard_product(next_layer.weighted_error)
+                @error = @activation_function.apply_activation_function_derivative(@before_activation).hadamard_product(next_layer.weighted_error)
             end
 
             # Calls the optimizer set in the config.
@@ -84,39 +77,27 @@ module Filo
                 @weights = @config[:optimizer].optimize_weights(@weights, weights_gradient)
             end
 
-            # call-seq:
-            # weighted_error -> Matrix
-            #
             # Returns weighted error of layer.
             #
             def weighted_error
-                @error * @weights
+                return @error * @weights
             end
 
-            # call-seq:
-            # weights_gradient -> Matrix
-            #
             # Returns a Matrix containing the gradients of the weights.
             #
             def weights_gradient
-                @error.t * @input / @output.row_size
+                return @error.t * @input / @output.row_size
             end
 
-            # call-seq:
-            # biases_gradient -> Vector
-            #
             # Returns a Vector containing the gradients of the biases.
             #
             def biases_gradient
                 #Sum error over batch, divide by @output.row_size to get average over batch
-                Vector[*@error.t.map_row { |row| row.reduce(0) { |acc, val| acc + val } }] / @output.row_size
+                return @error.t.map_row { |row| row.reduce(0) { |acc, val| acc + val } }.to_vector / @output.row_size
             end
 
             private
 
-            # call-seq:
-            # rand_weight -> Numeric
-            #
             # Returns random Numeric between 0 and 1.
             #
             def rand_weight
