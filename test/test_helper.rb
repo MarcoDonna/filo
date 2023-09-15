@@ -27,5 +27,13 @@ module Test::Unit::Assertions
 
         build_message(message, format, *arguments)
     end
+
 end
 
+module Filo::Layer
+
+    class Layer
+        attr_accessor :input, :output, :error
+    end
+
+end
