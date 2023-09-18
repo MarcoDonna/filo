@@ -1,5 +1,13 @@
 require_relative '../../test_helper'
 
+module Filo::Layer
+
+    class Layer
+        attr_accessor :input, :output, :error, :before_activation
+    end
+
+end
+
 class TestDenseLayer < Test::Unit::TestCase
 
     def setup
