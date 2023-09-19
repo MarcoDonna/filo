@@ -17,12 +17,10 @@
 module Filo
     class NeuralNetwork
 
-        # call-seq:
-        # new(layers: Array, optimizer: Optimizer=nil) -> Filo::NeuralNetwork
-        #
-        def initialize config
-            @config = config
-            @layers = @config[:layers] || []
+        def initialize layers: nil, optimizer: nil
+            raise ArgumentError.new if layers.nil?
+            @layers = layers
+            @optimizer = optimizer
             @depth = @layers.size
         end
 
@@ -40,10 +38,6 @@ module Filo
             output_layer.output
         end
 
-        # call-seq:
-        # train(Matrix, Matrix, {batch_size: Numeric, epochs: Numeric, target_loss: Numeric=nil})
-        # train(Matrix, Matrix, {batches: Numeric, epochs: Numeric, target_loss: Numeric=nil})
-        #
         # If no batch_size or batches is passed, batch_size is set to take entire dataset.
         # If only batches is passed, batches is used to compute batch_size
         #
@@ -55,33 +49,35 @@ module Filo
         #   # Train network
         #   network.train(data_features, data_targets, epochs: 50000, batches: 1, target_loss: 0.05)
         #
-        def train input, target, options
-            # Split data in  batches if batch_size or batches is set
-            options[:batch_size] = input.row_size if options[:batch_size].nil?
-            options[:batch_size] = (input.row_size / options[:batches].to_f) unless options[:batches].nil?
-            input_batches = input.to_a.each_slice(options[:batch_size]).map { |mat| Matrix[*mat] }
-            target_batches = target.to_a.each_slice(options[:batch_size]).map { |mat| Matrix[*mat] }
+        def train x: nil, y: nil, epochs: nil, target_loss: nil, batch_size: nil, batches: nil, optimizer: nil, debug: false
+            raise ArgumentError.new if x.nil? or y.nil?
+
+            @optimizer = optimizer unless optimizer.nil?
+
+            batch_size = x.row_size if batch_size.nil?
+            batch_size = (x.row_size / batches.to_f).ceil unless batches.nil?
+
+            input_batches = x.to_a.each_slice(batch_size).map { |mat| mat.to_matrix }
+            target_batches = y.to_a.each_slice(batch_size).map { |mat| mat.to_matrix }
 
             training_pairs = input_batches.zip(target_batches)
 
-            options[:epochs].times do |e|
-                p e if options[:debug] === true
+            epochs.times do |e|
+                p e if debug === true
                 training_pairs.each do |input, target|
                     forward(input)
                     backprop(target)
                     optimize()
                 end
+
                 # Check for average output layer target loss exit condition
-                unless options[:target_loss].nil?
+                unless target_loss.nil?
                     avg_loss_at_timestep = output_layer.loss_metric.last.inject(0) { |acc, val| acc + val} / output_layer.size
-                    return if avg_loss_at_timestep <= options[:target_loss]
+                    return if avg_loss_at_timestep <= target_loss
                 end
             end
         end
 
-        # call-seq:
-        # forward(Matrix) -> Matrix
-        #
         # Takes a Matrix of inputs and propagates them trough the network. Returns the output of the output layer.
         #
         #   # predict something
@@ -98,9 +94,6 @@ module Filo
             return output
         end
 
-        # call-seq:
-        # backprop(Matrix) -> Matrix
-        #
         # Takes a Matrix of targets, computes the loss and backprops it trought the network.
         #
         def backprop target
@@ -120,11 +113,11 @@ module Filo
         # Otherwise tries to call the method +optimize+ of each layer.
         #
         def optimize
-            if(@config[:optimizer].nil?)
+            if(@optimizer.nil?)
                 @layers.each { |layer| layer.optimize if layer.respond_to?(:optimize) }
             else
-                biases = @config[:optimizer].optimize_biases(flattened_biases(), flattened_biases_gradients())
-                weights = @config[:optimizer].optimize_weights(flattened_weights(), flattened_weights_gradients())
+                biases = @optimizer.optimize_biases(biases: flattened_biases(), gradients: flattened_biases_gradients())
+                weights = @optimizer.optimize_weights(weights: flattened_weights(), gradients: flattened_weights_gradients())
                 distribute_biases(biases)
                 distribute_weights(weights)
             end
@@ -132,9 +125,6 @@ module Filo
 
         private
 
-        # call-seq:
-        # flattened_biases -> Vector
-        #
         # Returns a list of flattened biases of all the layers.
         #
         def flattened_biases
@@ -150,9 +140,6 @@ module Filo
             Vector[*@layers.inject([]) { |list, layer| list << (layer.respond_to?(:biases_gradient) ? layer.biases_gradient.to_a : []) }.flatten]
         end
 
-        # call-seq:
-        # distribute_biases(Vector)
-        #
         # Given a list of Vectors, distributes the to the layers following the order:
         # 1. layers from input_layer to output_layer.
         # 2. neurons from 0 to layer_size.
@@ -167,27 +154,18 @@ module Filo
             end
         end
 
-        # call-seq:
-        # flattened_weights -> Vector
-        #
         # Returns a list of flattened weights of all the layers.
         #
         def flattened_weights
             Vector[*@layers.inject([]) { |list, layer| list << (layer.respond_to?(:weights) ? layer.weights.to_a : []) }.flatten]
         end
 
-        # call-seq:
-        # flattened_weights -> Vector
-        #
         # Returns a list of flattened weights gradients of all the layers.
         #
         def flattened_weights_gradients
             Vector[*@layers.inject([]) { |list, layer| list << (layer.respond_to?(:weights_gradient) ? layer.weights_gradient.to_a : []) }.flatten]
         end
 
-        # call-seq:
-        # distribute_biases(Vector)
-        #
         # Given a list of Vectors, distributes the to the layers following the order:
         # 1. layers from input_layer to output_layer.
         # 2. neurons from 0 to layer_size.
