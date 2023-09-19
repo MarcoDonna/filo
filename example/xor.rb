@@ -19,22 +19,22 @@ xor_t = Matrix[
 # Creating the layers of the Neural Network
 # This Network is made of
 # - InputLayer with 2 Nodes, pne for each column in the training features
-# - DenseLayer with 3 Nodes, each Node has 2 weights (one for each node in the InputLayer).
+# - DenseLayer with 4 Nodes, each Node has 2 weights (one for each node in the InputLayer).
 #   - This layer uses the Sigmoid activation function
-# - OutputLayer with 2 Nodes, one for each column in the training targets. Each node has 3 weights, one for each node in the DenseLayer.
+# - OutputLayer with 2 Nodes, one for each column in the training targets. Each node has 4 weights, one for each node in the DenseLayer.
 #   - The OutputLayer uses the Softmax Activation Function and CCE (CategoricalCrossEntropy) as loss function.
-layers =[
-    Filo::Layer.InputLayer(2),
-    Filo::Layer.DenseLayer(2, 3, activation_function: Filo::Activation.Sigmoid),
-    Filo::Layer.OutputLayer(3, 2, activation_function: Filo::Activation.Softmax, loss_function: Filo::Loss.CCE)
+layers = [
+    Filo::Layer.InputLayer(size: 2),
+    Filo::Layer.DenseLayer(size: 4, input_size: 2, activation_function: Filo::Activation.Sigmoid),
+    Filo::Layer.OutputLayer(size: 2, input_size: 4, activation_function: Filo::Activation.Softmax, loss_function: Filo::Loss.CCE)
 ]
 
 # Creating the Neural Network, use Stochastic Gradient Descent as Optimizer
-network = Filo::NeuralNetwork.new(layers: layers, optimizer: Filo::Optimizer.SGD(learning_rate: 0.1))
+network = Filo::NeuralNetwork.new(layers: layers, optimizer: Filo::Optimizer.Momentum(learning_rate: 0.2))
 
 # Train the Neural Network to solve the XOR problem
 # Target loss is likely to be reached before running out of epochs
-network.train(xor_f, xor_t, epochs: 50000, batches: 1, target_loss: 0.05)
+network.train(x: xor_f, y: xor_t, epochs: 50000, batches: 1, target_loss: 0.05, debug: true)
 
 # Log the loss metric at the start and at the end of training
 p network.output_layer.loss_metric.first
